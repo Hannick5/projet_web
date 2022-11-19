@@ -76,7 +76,7 @@ fetch('objets.php?id=2')
     Markers.addLayer(codeMarker);
     
     map.on('zoomend', function() {
-        if (map.getZoom() <10){
+        if (map.getZoom() <result.zoom_min){
                 map.removeLayer(Markers);
         }
         else {
@@ -88,8 +88,30 @@ fetch('objets.php?id=2')
 
 //Objet bloqué par un code
 
-fetch('objets.php?id=1')
+fetch('objets.php?id=3')
 .then(result => result.json())
 .then(result => {
-    result
+    result = result[0];
+    var securiteIcon = L.icon({
+    iconUrl: 'images/parchemin-ancien.png',
+
+    iconSize:     [60, 75], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+    var securiteMarker = L.marker([result.latitude, result.longitude], {icon: securiteIcon});
+
+    var Markers = new L.FeatureGroup();
+    
+    Markers.addLayer(securiteMarker);
+    
+    map.on('zoomend', function() {
+        if (map.getZoom() <result.zoom_min){
+                map.removeLayer(Markers);
+        }
+        else {
+                map.addLayer(Markers);
+            }
+    });
 })
