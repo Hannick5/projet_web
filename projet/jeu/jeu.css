@@ -5,7 +5,46 @@ body {
 }
 
 header{
+    display: grid;
     grid-row: 1;
+    grid-column: auto;
+    background-color: #242026;
+    box-shadow: 0 5px 15px rgba(37, 33, 59, 0.7);
+    box-shadow: 5px 0 15px rgba(37, 33, 59, 0.7);
+    border-radius: 10px;
+    margin-bottom: 1vh;
+    height: 5vh;
+    grid-template-columns: 20% 60% 15% 5%;
+}
+#gamename{
+    grid-column: 1;
+    grid-row:1;
+    margin: 0 auto;
+    margin-top: 2.5%;
+    font-weight: bold;
+    color:antiquewhite;
+    font-size: 100%;
+  
+}
+#gamename:hover{
+    text-shadow: 0 0 15px rgba(135, 119, 228, 0.7);
+}
+#username{
+    grid-column: 3;
+    font-weight: bold;
+    color:antiquewhite;
+    font-size: 20px;
+   
+}
+#username:hover{
+    text-shadow: 0 0 15px rgba(135, 119, 228, 0.7);
+}
+#pourcentage_fin{
+    grid-column: 4;
+    font-weight: bold;
+    color:antiquewhite;
+    font-size: 20px;
+ 
 }
 #contenu{
     display:grid;
@@ -14,16 +53,17 @@ header{
 
 }
 #map { 
-    height: 97vh;
+    height: 92vh;
     grid-row: 1 ;
     grid-column: 2;
-    margin-left: 2%;
+    margin-left: 1vh;
     border-radius: 10px;
     box-shadow: 0 10px 20px rgba(27, 24, 44, 0.7);
+    
 }
 #inventaire{
     display: grid;
-    height:97vh;
+    height:92vh;
     grid-row: 1;
     grid-column: 1;
     background-color: #242026;
