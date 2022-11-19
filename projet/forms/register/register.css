@@ -74,6 +74,7 @@ body {
    letter-spacing: 4px;
    border: 1px solid #8F7CEC;
    margin: auto;
+   
 }
 
 #submit:hover {
@@ -89,3 +90,6 @@ body {
    margin-top: 20px;
 }
 
+.erreur{
+    background: red;
+}
