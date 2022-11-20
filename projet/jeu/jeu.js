@@ -10,6 +10,8 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 L.Control.geocoder().addTo(map);
+
+
 //Objet recupérable
 
 fetch('objets.php?id=1')
@@ -21,19 +23,19 @@ fetch('objets.php?id=1')
     var keyIcon = L.icon({
         iconUrl: 'images/key.png',
     
-        iconSize:     [60, 95], // size of the icon
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        iconSize:     [60, 95], 
+        iconAnchor:   [22, 94], 
+        popupAnchor:  [-3, -76] 
     });
 
     function moveToInventory(){
         var keyPic = document.createElement("img");
         keyPic.setAttribute("src", "images/key.png")
-        keyPic.setAttribute("height", "130");
-        keyPic.setAttribute("width", "90");
-        keyPic.setAttribute("alt", "Key");
-        keyPic.style.marginLeft = "18px";
-        keyPic.style.marginTop = "40px";
+        keyPic.setAttribute("height","80%");
+        keyPic.setAttribute("width","100%");
+        keyPic.setAttribute("max-width","100%");
+        keyPic.setAttribute("max-height","100%");
+        keyPic.style.marginTop = "20px";
         keyPic.setAttribute("class","key");
         placeholder1.appendChild(keyPic);
         Markers.removeLayer(keyMarker);
@@ -65,9 +67,9 @@ fetch('objets.php?id=2')
   var codeIcon = L.icon({
     iconUrl: 'images/parchemin-ancien.png',
 
-    iconSize:     [60, 75], // size of the icon
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    iconSize:     [60, 75], 
+    iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
     });
 
     function afficheCode(){
@@ -110,22 +112,23 @@ fetch('objets.php?id=3')
     var securiteIcon = L.icon({
     iconUrl: 'images/securite.png',
 
-    iconSize:     [60, 75], // size of the icon
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    iconSize:     [60, 75], 
+    iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
     });
 
     var keyIcon = L.icon({
         iconUrl: 'images/key.png',
     
-        iconSize:     [60, 95], // size of the icon
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        iconSize:     [60, 95], 
+        iconAnchor:   [22, 94], 
+        popupAnchor:  [-3, -76] 
     });
 
     //recupération du code
     
     codeReel = 0;
+
 
     
 
@@ -183,35 +186,34 @@ fetch('objets.php?id=4')
     var treasureIcon = L.icon({
     iconUrl: 'images/treasure.png',
 
-    iconSize:     [60, 75], // size of the icon
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    iconSize:     [60, 65], 
+    iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
     });
 
     var gemmeIcon = L.icon({
         iconUrl: 'images/gemme.png',
     
-        iconSize:     [60, 95], // size of the icon
-        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        iconSize:     [60, 95], 
+        iconAnchor:   [22, 94], 
+        popupAnchor:  [-3, -76] 
     });
 
     function moveToInventory(){
         var gemmePic = document.createElement("img");
         gemmePic.setAttribute("src", "images/gemme.png")
-        gemmePic.setAttribute("height", "130");
-        gemmePic.setAttribute("width", "90");
+        gemmePic.setAttribute("height","100%");
+        gemmePic.setAttribute("width","100%");
+        gemmePic.setAttribute("max-width","100%");
+        gemmePic.setAttribute("max-height","100%");
         gemmePic.setAttribute("alt", "Gemme");
-        gemmePic.style.marginLeft = "18px";
-        gemmePic.style.marginTop = "40px";
-
         placeholder3.appendChild(gemmePic);
         map.removeLayer(sortieMarker);
 
     }
 
     var sortieMarker = L.marker([result.latitude, result.longitude], {icon: gemmeIcon}).on("click",moveToInventory);
-    var treasureMarker = L.marker([result.latitude, result.longitude], {icon: treasureIcon}).addTo(map).on("click",isThereObject);
+    var treasureMarker = L.marker([result.latitude, result.longitude], {icon: treasureIcon}).on("click",isThereObject);
 
 
     function isThereObject(e){  
@@ -219,7 +221,9 @@ fetch('objets.php?id=4')
         console.log(placeholder1.classList);
         if(placeholder1.classList.contains("key")){
             map.removeLayer(treasureMarker);
-                sortieMarker.addTo(map);
+            Markers.removeLayer(treasureMarker);
+            Markers.addLayer(sortieMarker); 
+            sortieMarker.addTo(map);
         }
         else{
             popup.setContent( "Vous n'avez pas la clé." );
@@ -227,6 +231,20 @@ fetch('objets.php?id=4')
     }
 
     var popupStatic = '<p style="height:200px; width:200px">static content</p>'
+
+    var Markers = new L.FeatureGroup();
+    
+    
+    Markers.addLayer(treasureMarker);
+
+    map.on('zoomend', function() {
+        if (map.getZoom() < 15  ){
+                map.removeLayer(Markers);
+        }
+        else {
+                map.addLayer(Markers);
+            }
+    });
 
     treasureMarker.bindPopup(popupStatic);
 
