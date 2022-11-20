@@ -14,7 +14,38 @@
      <link rel="stylesheet" href="jeu.css">
 </head>
 <body>
-    <div id="map"></div>
+    <header>
+        <div id="username"><p></p></div>
+        <div id="pourcentage_fin"><p></p></div>
+        <div id="gamename"><p></p></div>
+    </header>
+
+    <nav id="menu">
+
+    </nav>
+
+    <div id="contenu">
+        <div id="map"></div>
+        <div id="inventaire">
+            <div id="obj1" class="objet"></div>
+            <div id="obj2" class="objet"></div>
+            <div id="obj3" class="objet"></div>
+            <div id="obj4" class="objet"></div>
+            <div id="obj5" class="objet"></div>
+            <div id="obj6" class="objet"></div>
+        </div>
+    </div>
+
+    <form method="get" id="form">
+        <p id="erreurCode"></p>
+        <input type="text" placeholder="Entrez le code" id="codeValue">
+        <input type="submit" id="submit" value="OK">
+    </form>
+
+    <footer>
+
+    </footer>
+    
     <script src="jeu.js"></script>
 </body>
 </html>
