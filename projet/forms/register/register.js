@@ -1,39 +1,56 @@
-let register = document.getElementById("register")
-let us = register.elements["us"];
-let mdp = register.elements["mpd"];
-let cmdp = register.elements["cmpd"];
+  const username = document.getElementById('username')
+        const password = document.getElementById('password')
+        const check = document.getElementById('check')
+        const spinner = document.getElementById('spinner')
+        const button = document.getElementById('connect')
+        const cpass = document.getElementById("confirmpassword")
+        var username_valid = false;
+        var password_valid = false;
+        var cpass_valid = false;
+
+        username.oninput = function() {
+            if (this.value.length > 4) {
+                username_valid = true
+            } else {
+                username_valid = false
+            }
+            form_valid(username_valid, password_valid,cpass_valid)
+        }
+
+        password.oninput = function() {
+            if (this.value.length > 8) {
+                password_valid = true
+            } else {
+                password_valid = false
+            }
+
+            form_valid(username_valid, password_valid,cpass_valid)
+        }
+        cpass.oninput = function(){
+            if (this.value==password.value) {
+                cpass_valid = true
+            } else {
+                cpass_valid = false
+            }
+
+            form_valid(username_valid, password_valid,cpass_valid)
+        }
+
+        function form_valid(username_valid, password_valid) {
+            if (username_valid && password_valid && cpass_valid) {
+                spinner.style.display = 'none'
+                check.style.display = 'block'
+
+                button.classList.add('valid')
+                check.classList.add('up')
 
 
-function valider (event) {
-    let form_OK = true;
-    
-    if(us.value == ""){
-        form_OK = false;
-        us.classList.add("erreur");
-    }
-    else{
-        us.classList.remove("erreur");
-    }
-    if(mdp.value.length <= 12 ){
-        form_OK = false;
-        mdp.classList.add("erreur");
-    }
-    else{
-        mdp.classList.remove("erreur");
-    }
-    if(cmdp!=mdp ){
-        form_OK = false;
-        mdp.classList.add("erreur");
-        cmdp.classList.add("erreur");
-    }
-    else{
-        mdp.classList.remove("erreur");
-        cmdp.classList.remove("erreur");
-    }
+            } else {
+                spinner.style.display = 'block'
+                check.style.display = 'none'
+                button.classList.remove('valid')
 
-    if(!form_OK){
-        event.preventDefault();
-    }
-}
+                check.classList.remove('up')
 
-register.addEventListener('submit', valider); 
+            }
+        }
