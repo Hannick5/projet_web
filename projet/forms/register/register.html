@@ -1,5 +1,13 @@
- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-<link rel="stylesheet" href="register.css">
+<!DOCTYPE html>
+<html lang="fr">
+    <head>    
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+        <link rel="stylesheet" href="register.css">
+        <meta charset="UTF-8">
+        <title>Register</title>
+        <meta name = "Register" content="">
+    </head> 
+
 <div class="login-box">
     <h2>Register</h2>    
         <form method="POST" onSubmit="{registerUser}">
@@ -17,14 +25,22 @@
                 </div>
 
                 <div class="container ">
-                    <button type='submit' id='connect' class="button type3 ">
+                    <button type='submit' id='connect' class="button type3">
+                        <script>
+                            document.getElementById("connect").addEventListener("click", myFunction);
+                            function myFunction() {
+                              window.location.replace("jeu.html");
+                              alert("frfgezgerg");
+                            }
+                          </script>
                         <span>Connect</span> 
                     </button>
                     <i class="fa fa-spinner " id='spinner' aria-hidden="true "></i>
                     <i class="fa fa-check " id='check' aria-hidden="true "></i>
-                <script src="register.js" ></script>     
+                
                 </div>
 
 
             </form>
+            <script src="register.js" ></script>     
 </div>
