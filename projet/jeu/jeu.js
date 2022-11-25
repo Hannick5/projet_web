@@ -1,9 +1,19 @@
+//Déclaration de variables globales
+
 var map = L.map('map').setView([51.505, -0.09], 13);
+var inventaire = document.getElementById("inventaire");
+var formulaire = document.getElementById("form");
+
+//On charge les slots d'inventaire
+
 var placeholder1 = document.getElementById("obj1");
 var placeholder2 = document.getElementById("obj2");
 var placeholder3 = document.getElementById("obj3");
-var inventaire = document.getElementById("inventaire");
-var form = document.getElementById("form");
+var placeholder4 = document.getElementById("obj4");
+var placeholder5 = document.getElementById("obj5");
+var placeholder6 = document.getElementById("obj6");
+
+//Création de la map leaflet
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
@@ -14,20 +24,24 @@ L.Control.geocoder().addTo(map);
 
 //Objet recupérable
 
-fetch('objets.php?id=1')
+fetch('objets.php?id=1') //Requête ajax pour récupérer l'objet qui a l'id correspondant dans la bdd (voir php)
 .then(result => result.json())
 .then(result => {
 
-    result = result[0];
+    result = result[0]; //Pour faciliter l'accès aux attributs du json..
 
-    var keyIcon = L.icon({
-        iconUrl: 'images/key.png',
+    //Création d'icone pour les marker à l'aide de leaflet
+
+    var keyIcon = L.icon({ 
+        iconUrl: 'images/key.png', //Le répertoire images contient toutes les images utilisées
     
         iconSize:     [60, 95], 
         iconAnchor:   [22, 94], 
         popupAnchor:  [-3, -76] 
     });
 
+    //Fonction qui va déplacer l'objet vers l'inventaire
+    
     function moveToInventory(){
         var keyPic = document.createElement("img");
         keyPic.setAttribute("src", "images/key.png")
@@ -36,13 +50,16 @@ fetch('objets.php?id=1')
         keyPic.setAttribute("max-width","100%");
         keyPic.setAttribute("max-height","100%");
         keyPic.style.marginTop = "20px";
-        keyPic.setAttribute("class","key");
         placeholder1.appendChild(keyPic);
         Markers.removeLayer(keyMarker);
-        placeholder1.classList.add("key");
+        placeholder1.classList.add(result.nom); //Important si c'est un objet qui en bloque un autre
     }
 
+    //On utilise la méthode ".on" des marker pour ajouter un event listener
+
     var keyMarker = L.marker([result.latitude, result.longitude], {icon: keyIcon}).on("click",moveToInventory);
+
+    //Gestion du zoom avec construction et déconstruction d'un groupe de marker
 
     var Markers = new L.FeatureGroup();
     
@@ -72,21 +89,38 @@ fetch('objets.php?id=2')
     popupAnchor:  [-3, -76] 
     });
 
-    function afficheCode(){
-        var codePic = document.createElement("img");
-        codePic.setAttribute("src", "images/parchemin-ancien.png")
-        codePic.setAttribute("height", "130");
-        codePic.setAttribute("width", "90");
-        codePic.setAttribute("alt", "Code");
-        codePic.setAttribute("class", "codeSecu");
-        codePic.style.marginLeft = "18px";
-        codePic.style.marginTop = "40px";
+    //Fonction qui affiche le code après un clique
 
-        placeholder2.appendChild(codePic);
-        alert(result.code);
+    var doubleClique = true; //Pemier clique affiche le code et deuxième déplace dans l'inventaire
+
+    function afficheCode(e){
+        if(doubleClique){
+            var popup = e.target.getPopup();
+            popup.setContent("Voici le code : " + result.code); //accès au code et insertion dans le popup
+        }
+        else{
+            var codePic = document.createElement("img");
+            codePic.setAttribute("src", "images/parchemin-ancien.png")
+            codePic.setAttribute("height", "130");
+            codePic.setAttribute("width", "90");
+            codePic.setAttribute("alt", "Code");
+            codePic.setAttribute("max-width","100%");
+            codePic.setAttribute("max-height","100%");
+            codePic.setAttribute("class", "codeSecu");
+            codePic.style.marginLeft = "18px";
+            codePic.style.marginTop = "40px";
+            placeholder2.appendChild(codePic);
+            Markers.removeLayer(codeMarker);
+        }
+        doubleClique=false;
+        
     }
 
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>'
+
     var codeMarker = L.marker([result.latitude, result.longitude], {icon: codeIcon}).on('click',afficheCode);
+
+    //Gestion du zoom
 
     var Markers = new L.FeatureGroup();
     
@@ -101,6 +135,9 @@ fetch('objets.php?id=2')
             }
     });
 
+    codeMarker.bindPopup(popupStatic);
+
+    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
 })
 
 //Objet bloqué par un code
@@ -129,10 +166,12 @@ fetch('objets.php?id=3')
     
     codeReel = 0;
 
-
+    fetch('objets.php?id=2')
+    .then(result => result.json())
+    .then(result => {
+        codeReel=result[0].code;
+    })
     
-
-
     function moveToInventory(){
         var keyPic = document.createElement("img");
         keyPic.setAttribute("src", "images/key.png")
@@ -142,22 +181,28 @@ fetch('objets.php?id=3')
         keyPic.style.marginLeft = "18px";
         keyPic.style.marginTop = "40px";
 
-        placeholder2.appendChild(keyPic);
+        placeholder4.appendChild(keyPic);
         map.removeLayer(sortieMarker);
 
     }
 
-    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: keyIcon}).on("click",moveToInventory);
+    var indice = result.Indice;
+    var indiceHTML = document.createElement("p");
+    indiceHTML.innerText = indice;
+    formulaire.appendChild(indiceHTML);
 
+    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: keyIcon}).on("click",moveToInventory);
+    var submit = document.getElementById("submit");
+    var codeInput = document.getElementById("codeValue");
+    
     function reviewCode(e){
         var popup = e.target.getPopup();
-        var formulaire = document.getElementById("form");
-        var submit = document.getElementById("submit");
-        var codeInput = document.getElementById("codeValue");
         var erreur = document.getElementById("erreurCode");
         popup.setContent( formulaire );
+
         submit.addEventListener("click",function(event){
             if(codeInput.value != codeReel){
+                
                 erreur.innerHTML="Mauvais code réessayez";
                 popup.setContent( formulaire );
                 event.preventDefault();
@@ -171,6 +216,7 @@ fetch('objets.php?id=3')
         })
     }
 
+
     var securiteMarker = L.marker([result.latitude, result.longitude], {icon: securiteIcon}).addTo(map).on("click",reviewCode);
     var popupStatic = '<p style="height:200px; width:200px">static content</p>'
 
@@ -178,10 +224,24 @@ fetch('objets.php?id=3')
     
 })
 
+//Objet bloqué par un objet
+
 fetch('objets.php?id=4')
 .then(result => result.json())
 .then(result => {
     result = result[0];
+
+    var idObjBloque = result.idBloque;
+
+    var nomObjBloque = "";
+
+    fetch('objets.php?id='+idObjBloque)
+    .then(result => result.json())
+    .then(result => {
+        nomObjBloque = result[0].nom;
+    })
+
+
 
     var treasureIcon = L.icon({
     iconUrl: 'images/treasure.png',
@@ -218,11 +278,10 @@ fetch('objets.php?id=4')
 
     function isThereObject(e){  
         var popup = e.target.getPopup();
-        console.log(placeholder1.classList);
-        if(placeholder1.classList.contains("key")){
+        if(placeholder1.classList.contains(nomObjBloque)){
             map.removeLayer(treasureMarker);
             Markers.removeLayer(treasureMarker);
-            Markers.addLayer(sortieMarker); 
+            Markers.addLayer(sortieMarker);
             sortieMarker.addTo(map);
         }
         else{
@@ -230,7 +289,7 @@ fetch('objets.php?id=4')
         }
     }
 
-    var popupStatic = '<p style="height:200px; width:200px">static content</p>'
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>';
 
     var Markers = new L.FeatureGroup();
     
@@ -249,3 +308,4 @@ fetch('objets.php?id=4')
     treasureMarker.bindPopup(popupStatic);
 
 })
+
