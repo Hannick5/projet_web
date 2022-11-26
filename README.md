@@ -73,13 +73,13 @@ projet/
 
 ## Jeu
 
-Le but de l'escape game est de trouver 3 gemmes (bleue, verte et rouge) en résolvant des énigmes qui vous menerons aux différents coffres contenant les gemmes. Votre score est calculé en fonction de votre rapidité attention le timer commence au premier clique sur le premier objet visible !
+Le but de l'escape game est de trouver 3 gemmes (bleue, vert et rouge) en résolvant des énigmes qui vous mènerons aux différents coffres contenant les gemmes vous devez récupérer les gemmes bleue et rouge en premières et lorsque vous récupérez la gemme verte vous devrez cliquer sur le portail qui apparaît pour finir la partie. Votre score est calculé en fonction de votre rapidité attention le timer commence au premier clique sur le premier objet visible !
 
 ## Solution du jeu
 
-Pour le code du premier coffre fort : sur la tour eiffel
+Pour le code du coffre fort : cathédrale de forcalquier
 
-Pour la clé : cathédrale de forcalquier
+Pour la clé : sur la tour eiffel
 
 Pour les 3 coffres : vert mont rushmore, bleu muraille de chine, rouge Grand monument Mansudae
 
