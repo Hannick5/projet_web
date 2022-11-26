@@ -29,36 +29,46 @@ fetch('objets.php?id=1') //Requête ajax pour récupérer l'objet qui a l'id cor
 .then(result => {
 
     result = result[0]; //Pour faciliter l'accès aux attributs du json..
-
+    
     //Création d'icone pour les marker à l'aide de leaflet
 
     var keyIcon = L.icon({ 
         iconUrl: 'images/key.png', //Le répertoire images contient toutes les images utilisées
     
-        iconSize:     [60, 95], 
+        iconSize:     [150, 150], 
         iconAnchor:   [22, 94], 
         popupAnchor:  [-3, -76] 
     });
 
     //Fonction qui va déplacer l'objet vers l'inventaire
-    
-    function moveToInventory(){
-        var keyPic = document.createElement("img");
-        keyPic.setAttribute("src", "images/key.png")
-        keyPic.setAttribute("height","80%");
-        keyPic.setAttribute("width","100%");
-        keyPic.setAttribute("max-width","100%");
-        keyPic.setAttribute("max-height","100%");
-        keyPic.style.marginTop = "20px";
-        placeholder1.appendChild(keyPic);
-        Markers.removeLayer(keyMarker);
-        placeholder1.classList.add(result.nom); //Important si c'est un objet qui en bloque un autre
+
+    click = true;
+    function moveToInventory(e){
+        if(click){
+            var popup = e.target.getPopup();
+            popup.setContent(result.Indice);
+        }
+        else{
+            var keyPic = document.createElement("img");
+            keyPic.setAttribute("src", "images/key.png")
+            keyPic.setAttribute("height","80%");
+            keyPic.setAttribute("width","100%");
+            keyPic.setAttribute("max-width","100%");
+            keyPic.setAttribute("max-height","100%");
+            keyPic.style.marginTop = "20px";
+            placeholder1.appendChild(keyPic);
+            Markers.removeLayer(keyMarker);
+            placeholder1.classList.add(result.nom);//Important si c'est un objet qui en bloque un autre
+
+        } 
+        click=false;
     }
 
     //On utilise la méthode ".on" des marker pour ajouter un event listener
 
     var keyMarker = L.marker([result.latitude, result.longitude], {icon: keyIcon}).on("click",moveToInventory);
-
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>'
+    keyMarker.bindPopup(popupStatic);
     //Gestion du zoom avec construction et déconstruction d'un groupe de marker
 
     var Markers = new L.FeatureGroup();
@@ -73,6 +83,7 @@ fetch('objets.php?id=1') //Requête ajax pour récupérer l'objet qui a l'id cor
                 map.addLayer(Markers);
             }
     });
+    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
 })
 
 //Objet qui donne un code
@@ -91,28 +102,9 @@ fetch('objets.php?id=2')
 
     //Fonction qui affiche le code après un clique
 
-    var doubleClique = true; //Pemier clique affiche le code et deuxième déplace dans l'inventaire
-
     function afficheCode(e){
-        if(doubleClique){
             var popup = e.target.getPopup();
             popup.setContent("Voici le code : " + result.code); //accès au code et insertion dans le popup
-        }
-        else{
-            var codePic = document.createElement("img");
-            codePic.setAttribute("src", "images/parchemin-ancien.png")
-            codePic.setAttribute("height", "130");
-            codePic.setAttribute("width", "90");
-            codePic.setAttribute("alt", "Code");
-            codePic.setAttribute("max-width","100%");
-            codePic.setAttribute("max-height","100%");
-            codePic.setAttribute("class", "codeSecu");
-            codePic.style.marginLeft = "18px";
-            codePic.style.marginTop = "40px";
-            placeholder2.appendChild(codePic);
-            Markers.removeLayer(codeMarker);
-        }
-        doubleClique=false;
         
     }
 
@@ -154,8 +146,8 @@ fetch('objets.php?id=3')
     popupAnchor:  [-3, -76] 
     });
 
-    var keyIcon = L.icon({
-        iconUrl: 'images/key.png',
+    var scrollIcon = L.icon({
+        iconUrl: 'images/parchemin-ancien.png',
     
         iconSize:     [60, 95], 
         iconAnchor:   [22, 94], 
@@ -171,19 +163,18 @@ fetch('objets.php?id=3')
     .then(result => {
         codeReel=result[0].code;
     })
+
+    var indice_cle = '';
+
+    fetch('objets.php?id=7')
+    .then(result => result.json())
+    .then(result => {
+        indice_cle = result[0].Indice;
+    })
     
-    function moveToInventory(){
-        var keyPic = document.createElement("img");
-        keyPic.setAttribute("src", "images/key.png")
-        keyPic.setAttribute("height", "130");
-        keyPic.setAttribute("width", "90");
-        keyPic.setAttribute("alt", "Key");
-        keyPic.style.marginLeft = "18px";
-        keyPic.style.marginTop = "40px";
-
-        placeholder4.appendChild(keyPic);
-        map.removeLayer(sortieMarker);
-
+    function afficheIndice(e){
+        var popup = e.target.getPopup();
+        popup.setContent(indice_cle); 
     }
 
     var indice = result.Indice;
@@ -191,7 +182,7 @@ fetch('objets.php?id=3')
     indiceHTML.innerText = indice;
     formulaire.appendChild(indiceHTML);
 
-    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: keyIcon}).on("click",moveToInventory);
+    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: scrollIcon}).on("click",afficheIndice);
     var submit = document.getElementById("submit");
     var codeInput = document.getElementById("codeValue");
     
@@ -214,13 +205,18 @@ fetch('objets.php?id=3')
             }
             
         })
+        
     }
 
 
+
     var securiteMarker = L.marker([result.latitude, result.longitude], {icon: securiteIcon}).addTo(map).on("click",reviewCode);
-    var popupStatic = '<p style="height:200px; width:200px">static content</p>'
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>';
+
+    var popupStaticIndice = '<p style="height:200px; width:200px">static content</p>';
 
     securiteMarker.bindPopup(popupStatic);
+    sortieMarker.bindPopup(popupStaticIndice);
     
 })
 
@@ -244,7 +240,7 @@ fetch('objets.php?id=4')
 
 
     var treasureIcon = L.icon({
-    iconUrl: 'images/treasure.png',
+    iconUrl: 'images/coffre-au-tresor_rouge.png',
 
     iconSize:     [60, 65], 
     iconAnchor:   [22, 94], 
@@ -252,23 +248,35 @@ fetch('objets.php?id=4')
     });
 
     var gemmeIcon = L.icon({
-        iconUrl: 'images/gemme.png',
+        iconUrl: 'images/gemme_rouge.png',
     
         iconSize:     [60, 95], 
         iconAnchor:   [22, 94], 
         popupAnchor:  [-3, -76] 
     });
 
-    function moveToInventory(){
-        var gemmePic = document.createElement("img");
-        gemmePic.setAttribute("src", "images/gemme.png")
-        gemmePic.setAttribute("height","100%");
-        gemmePic.setAttribute("width","100%");
-        gemmePic.setAttribute("max-width","100%");
-        gemmePic.setAttribute("max-height","100%");
-        gemmePic.setAttribute("alt", "Gemme");
-        placeholder3.appendChild(gemmePic);
-        map.removeLayer(sortieMarker);
+    var click = true;
+
+    function moveToInventory(e){
+        if(click){
+            var popup = e.target.getPopup()
+            popup.setContent(result.Indice);
+        }
+        else{
+            var gemmePic = document.createElement("img");
+            gemmePic.setAttribute("src", "images/gemme_rouge.png")
+            gemmePic.setAttribute("height","100%");
+            gemmePic.setAttribute("width","100%");
+            gemmePic.setAttribute("max-width","100%");
+            gemmePic.setAttribute("max-height","100%");
+            gemmePic.setAttribute("alt", "Gemme");
+            placeholder3.appendChild(gemmePic);
+            map.removeLayer(sortieMarker);
+            placeholder3.classList.add("rouge");
+        }
+
+        click = false;
+        
 
     }
 
@@ -290,6 +298,7 @@ fetch('objets.php?id=4')
     }
 
     var popupStatic = '<p style="height:200px; width:200px">static content</p>';
+    var popupStaticRouge = '<p style="height:200px; width:200px">static content</p>';
 
     var Markers = new L.FeatureGroup();
     
@@ -306,6 +315,207 @@ fetch('objets.php?id=4')
     });
 
     treasureMarker.bindPopup(popupStatic);
-
+    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    sortieMarker.bindPopup(popupStaticRouge);
 })
 
+fetch('objets.php?id=5')
+.then(result => result.json())
+.then(result => {
+    result = result[0];
+
+    var idObjBloque = result.idBloque;
+
+    var nomObjBloque = "";
+
+    fetch('objets.php?id='+idObjBloque)
+    .then(result => result.json())
+    .then(result => {
+        nomObjBloque = result[0].nom;
+    })
+
+
+
+    var treasureIcon = L.icon({
+    iconUrl: 'images/coffre-au-tresor_bleu.png',
+
+    iconSize:     [60, 65], 
+    iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
+    });
+
+    var gemmeIcon = L.icon({
+        iconUrl: 'images/gemme_bleue.png',
+    
+        iconSize:     [60, 95], 
+        iconAnchor:   [22, 94], 
+        popupAnchor:  [-3, -76] 
+    });
+
+    var click = true;
+
+    function moveToInventory(e){
+        if(click){
+            var popup = e.target.getPopup()
+            popup.setContent(result.Indice);
+        }
+        else{
+            var gemmePic = document.createElement("img");
+            gemmePic.setAttribute("src", "images/gemme_bleue.png")
+            gemmePic.setAttribute("height","100%");
+            gemmePic.setAttribute("width","100%");
+            gemmePic.setAttribute("max-width","100%");
+            gemmePic.setAttribute("max-height","100%");
+            gemmePic.setAttribute("alt", "Gemme");
+            placeholder2.appendChild(gemmePic);
+            map.removeLayer(sortieMarker);
+            placeholder2.classList.add("bleue");
+        }
+
+        click = false;
+
+    }
+
+    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: gemmeIcon}).on("click",moveToInventory);
+    var treasureMarker = L.marker([result.latitude, result.longitude], {icon: treasureIcon}).on("click",isThereObject);
+
+
+    function isThereObject(e){  
+        var popup = e.target.getPopup();
+        if(placeholder1.classList.contains(nomObjBloque)){
+            map.removeLayer(treasureMarker);
+            Markers.removeLayer(treasureMarker);
+            Markers.addLayer(sortieMarker);
+            sortieMarker.addTo(map);
+        }
+        else{
+            popup.setContent( "Vous n'avez pas la clé." );
+        }
+    }
+
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>';
+    var popupStaticBleue = '<p style="height:200px; width:200px">static content</p>';
+
+
+    var Markers = new L.FeatureGroup();
+    
+    
+    Markers.addLayer(treasureMarker);
+
+    map.on('zoomend', function() {
+        if (map.getZoom() < 15  ){
+                map.removeLayer(Markers);
+        }
+        else {
+                map.addLayer(Markers);
+            }
+    });
+
+    treasureMarker.bindPopup(popupStatic);
+    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    sortieMarker.bindPopup(popupStaticBleue);
+})
+
+fetch('objets.php?id=6')
+.then(result => result.json())
+.then(result => {
+    result = result[0];
+
+    var idObjBloque = result.idBloque;
+
+    var nomObjBloque = "";
+
+    fetch('objets.php?id='+idObjBloque)
+    .then(result => result.json())
+    .then(result => {
+        nomObjBloque = result[0].nom;
+    })
+
+
+
+    var treasureIcon = L.icon({
+    iconUrl: 'images/coffre-au-tresor_vert.png',
+
+    iconSize:     [60, 65], 
+    iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
+    });
+
+    var gemmeIcon = L.icon({
+        iconUrl: 'images/gemme_verte.png',
+    
+        iconSize:     [60, 95], 
+        iconAnchor:   [22, 94], 
+        popupAnchor:  [-3, -76] 
+    });
+
+    function moveToInventory(e){
+        var popup = e.target.getPopup();
+        if(placeholder2.classList.contains("bleue") && placeholder3.classList.contains("rouge")){
+            var gemmePic = document.createElement("img");
+            gemmePic.setAttribute("src", "images/gemme_verte.png")
+            gemmePic.setAttribute("height","100%");
+            gemmePic.setAttribute("width","100%");
+            gemmePic.setAttribute("max-width","100%");
+            gemmePic.setAttribute("max-height","100%");
+            gemmePic.setAttribute("alt", "Gemme");
+            placeholder4.appendChild(gemmePic);
+            var portalIcon = L.icon({
+                iconUrl: 'images/portal.png',
+            
+                iconSize:     [60, 65], 
+                iconAnchor:   [22, 94], 
+                popupAnchor:  [-3, -76] 
+                });
+            var portalMarker = new L.marker([62.9028594423923, 92.56113619207827], {icon: portalIcon}).addTo(map);
+            map.setView([62.9028594423923, 92.56113619207827],5);
+            
+        }
+        else if(placeholder2.classList.contains("bleue") && !(placeholder3.classList.contains("rouge"))){
+            popup.setContent("Vous n'avez pas la gemme rouge.");
+        }
+        else if(!(placeholder2.classList.contains("bleue")) && placeholder3.classList.contains("rouge")){
+            popup.setContent("Vous n'avez pas la gemme bleue.");
+        }
+        else if(!(placeholder2.classList.contains("bleue")) && !(placeholder3.classList.contains("rouge"))){
+            popup.setContent("Vous n'avez ni la gemme bleue ni la rouge.");
+        }
+    }
+
+    var sortieMarker = L.marker([result.latitude, result.longitude], {icon: gemmeIcon}).on("click",moveToInventory);
+    var treasureMarker = L.marker([result.latitude, result.longitude], {icon: treasureIcon}).on("click",isThereObject);
+
+
+    function isThereObject(e){  
+        var popup = e.target.getPopup();
+        if(placeholder1.classList.contains(nomObjBloque)){
+            map.removeLayer(treasureMarker);
+            Markers.removeLayer(treasureMarker);
+            Markers.addLayer(sortieMarker);
+            sortieMarker.addTo(map);
+        }
+        else{
+            popup.setContent( "Vous n'avez pas la clé." );
+        }
+    }
+
+    var popupStatic = '<p style="height:200px; width:200px">static content</p>';
+    var popupStaticVerte = '<p style="height:200px; width:200px">static content</p>';
+
+    var Markers = new L.FeatureGroup();
+    
+    
+    Markers.addLayer(treasureMarker);
+
+    map.on('zoomend', function() {
+        if (map.getZoom() < 15  ){
+                map.removeLayer(Markers);
+        }
+        else {
+                map.addLayer(Markers);
+            }
+    });
+    sortieMarker.bindPopup(popupStaticVerte);
+    treasureMarker.bindPopup(popupStatic);
+    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+})
