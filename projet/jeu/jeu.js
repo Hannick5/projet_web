@@ -10,8 +10,6 @@ var placeholder1 = document.getElementById("obj1");
 var placeholder2 = document.getElementById("obj2");
 var placeholder3 = document.getElementById("obj3");
 var placeholder4 = document.getElementById("obj4");
-var placeholder5 = document.getElementById("obj5");
-var placeholder6 = document.getElementById("obj6");
 
 //Création de la map leaflet
 
@@ -200,11 +198,23 @@ fetch('objets.php?id=3')
             }
             else{
                 map.removeLayer(securiteMarker);
-                sortieMarker.addTo(map);
+                Markers.addTo(map);
                 event.preventDefault();
             }
             
         })
+        var Markers = new L.FeatureGroup();
+
+        Markers.addLayer(sortieMarker);
+    
+        map.on('zoomend', function() {
+            if (map.getZoom() <result.zoom_min){
+                    map.removeLayer(Markers);
+            }
+            else {
+                    map.addLayer(Markers);
+                }
+        });
         
     }
 
@@ -364,8 +374,6 @@ fetch('objets.php?id=5')
             gemmePic.setAttribute("src", "images/gemme_bleue.png")
             gemmePic.setAttribute("height","100%");
             gemmePic.setAttribute("width","100%");
-            gemmePic.setAttribute("max-width","100%");
-            gemmePic.setAttribute("max-height","100%");
             gemmePic.setAttribute("alt", "Gemme");
             placeholder2.appendChild(gemmePic);
             map.removeLayer(sortieMarker);
