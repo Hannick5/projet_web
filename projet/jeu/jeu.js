@@ -154,20 +154,20 @@ fetch('objets.php?id=3')
 
     //recupération du code
     
-    codeReel = 0;
+    codeReel = 0; //Variable externe à AJAX
 
     fetch('objets.php?id=2')
     .then(result => result.json())
     .then(result => {
-        codeReel=result[0].code;
+        codeReel=result[0].code; //stockage du code
     })
 
-    var indice_cle = '';
+    var indice_cle = ''; //Variable externe à AJAX
 
     fetch('objets.php?id=7')
     .then(result => result.json())
     .then(result => {
-        indice_cle = result[0].Indice;
+        indice_cle = result[0].Indice; //On récupère l'indice
     })
     
     function afficheIndice(e){
@@ -180,10 +180,14 @@ fetch('objets.php?id=3')
     indiceHTML.innerText = indice;
     formulaire.appendChild(indiceHTML);
 
+    //Marqueur en sortie du coffre
+
     var sortieMarker = L.marker([result.latitude, result.longitude], {icon: scrollIcon}).on("click",afficheIndice);
     var submit = document.getElementById("submit");
     var codeInput = document.getElementById("codeValue");
     
+    //Fonction qui vérifie si le code est bon
+
     function reviewCode(e){
         var popup = e.target.getPopup();
         var erreur = document.getElementById("erreurCode");
@@ -206,6 +210,9 @@ fetch('objets.php?id=3')
         var Markers = new L.FeatureGroup();
 
         Markers.addLayer(sortieMarker);
+
+        /*Gestion du zoom mais uniquement sur l'item en sortie car c'est le premier objet de la map
+        et il doit toujours être visible*/
     
         map.on('zoomend', function() {
             if (map.getZoom() <result.zoom_min){
@@ -218,11 +225,11 @@ fetch('objets.php?id=3')
         
     }
 
-
-
+    
+    //Marqueur du coffre et son popup
     var securiteMarker = L.marker([result.latitude, result.longitude], {icon: securiteIcon}).addTo(map).on("click",reviewCode);
     var popupStatic = '<p style="height:200px; width:200px">static content</p>';
-
+    //Popup associé au marqueur en sortie car c'est un indice
     var popupStaticIndice = '<p style="height:200px; width:200px">static content</p>';
 
     securiteMarker.bindPopup(popupStatic);
@@ -237,10 +244,12 @@ fetch('objets.php?id=4')
 .then(result => {
     result = result[0];
 
-    var idObjBloque = result.idBloque;
+    var idObjBloque = result.idBloque; //Id de l'objet bloqué qui est stocké dans la bdd
 
-    var nomObjBloque = "";
+    //Récupération du nom de l'objet qui bloque
 
+    var nomObjBloque = ""; 
+    
     fetch('objets.php?id='+idObjBloque)
     .then(result => result.json())
     .then(result => {
@@ -265,11 +274,13 @@ fetch('objets.php?id=4')
         popupAnchor:  [-3, -76] 
     });
 
+    //Gestion du double clique (premier clique = inde, deuxième clique = mise dans l'inventaire)
+
     var click = true;
 
     function moveToInventory(e){
         if(click){
-            var popup = e.target.getPopup()
+            var popup = e.target.getPopup();
             popup.setContent(result.Indice);
         }
         else{
@@ -293,6 +304,7 @@ fetch('objets.php?id=4')
     var sortieMarker = L.marker([result.latitude, result.longitude], {icon: gemmeIcon}).on("click",moveToInventory);
     var treasureMarker = L.marker([result.latitude, result.longitude], {icon: treasureIcon}).on("click",isThereObject);
 
+    //Vérifie si on a bien l'objet qui débloque dans l'inventaire
 
     function isThereObject(e){  
         var popup = e.target.getPopup();
@@ -309,6 +321,8 @@ fetch('objets.php?id=4')
 
     var popupStatic = '<p style="height:200px; width:200px">static content</p>';
     var popupStaticRouge = '<p style="height:200px; width:200px">static content</p>';
+
+    //Gestion du zoom
 
     var Markers = new L.FeatureGroup();
     
@@ -328,6 +342,8 @@ fetch('objets.php?id=4')
     var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
     sortieMarker.bindPopup(popupStaticRouge);
 })
+
+//Code identique au précédent fetch mais pour le coffre bleu
 
 fetch('objets.php?id=5')
 .then(result => result.json())
@@ -423,6 +439,8 @@ fetch('objets.php?id=5')
     var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
     sortieMarker.bindPopup(popupStaticBleue);
 })
+
+//Code identique au fetch précédent mais pour le coffre vert
 
 fetch('objets.php?id=6')
 .then(result => result.json())
