@@ -19,7 +19,6 @@
 ## Table of contents
 
 - [Projet](#projet)
-- [Arborescence de dossiers](#arborescence-de-dossiers)
 - [Installation](#installation)
 - [Jeu](#jeu)
 - [Solution du jeu](#solution-du-jeu)
@@ -36,20 +35,6 @@ La connexion à la BDD à l'aide de PHP, couplée aux différentes requêtes AJA
 
 Pour le côté client nous avons implémenter en CSS une approche GRID pour la structure du site ainsi que l'inventaire.
 
-## Arborescence de dossiers
-
-Voici un arbre indiquant la structure des fichiers dans le projet :
-
-```text
-projet/
-├──forms/
-│  ├── login
-│  └── register
-├── jeu/
-│  ├── images
-│  └── objets.php
-```
-
 ## Installation
 
 
@@ -62,7 +47,7 @@ projet/
 4. Ouvrez MAMP et vérifiez que le nom est bien localhost et vérifiez votre port dans les préférences
 5. Indiquez la position du dossier projet dans les paramètres de MAMP.
 6. Lancez le web serveur Apache et allez sur : http://localhost:8888/MAMP/ (ici 8888 indique le port que vous avez choisit modifiez le lien en fonction).
-7. Allez dans Tools > phpMyAdmin > import et choisissez le fichier '.sql' du projet.
+7. Allez dans Tools > phpMyAdmin > import et choisissez le fichier '.sql' du projet importez le dans une bdd nommée "projet_web_db".
 8. Vérifiez les paramètres dans le fichier objet.php (emplacement indiqué dans l'arborescence de dossiers)
     ```sh
    $link = mysqli_connect('localhost', 'root', 'root', 'projet_web_db');
