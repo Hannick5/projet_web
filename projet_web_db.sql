@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Nov 29, 2022 at 10:10 AM
+-- Generation Time: Dec 04, 2022 at 10:56 PM
 -- Server version: 5.7.34
 -- PHP Version: 7.4.21
 
@@ -20,8 +20,66 @@ SET time_zone = "+00:00";
 --
 -- Database: `projet_web_db`
 --
-CREATE DATABASE IF NOT EXISTS `projet_web_db` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `projet_web_db`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gamedata`
+--
+
+CREATE TABLE `gamedata` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `username` varchar(30) NOT NULL,
+  `score` double DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `gamedata`
+--
+
+INSERT INTO `gamedata` (`id`, `username`, `score`) VALUES
+(1, 'azeaze', NULL),
+(2, 'ozjeiqojdosld', NULL),
+(3, 'azeazeae', NULL),
+(4, 'hannick', NULL),
+(5, 'hannick1', NULL),
+(6, 'hannick55', NULL),
+(7, 'hannick56', NULL),
+(8, 'hannick900', NULL),
+(9, 'hannick1000', NULL),
+(10, 'hannick999', NULL),
+(11, 'hannick3000', NULL),
+(12, 'hannick3490', NULL),
+(13, 'hannick21032194', NULL),
+(14, 'han', NULL),
+(15, 'hanso', NULL),
+(16, 'hanzjs', NULL),
+(17, 'mkmaezkeozajipeji', NULL),
+(18, 'hannicktest', NULL),
+(19, 'hannicktest2', NULL),
+(20, 'hannicka!ezuaoel', NULL),
+(21, 'ahzeiokldqlsdp', NULL),
+(22, 'aozeiokzllkdqkopsdopz', NULL),
+(23, 'azjekjzaekllkazeae', NULL),
+(24, 'peazlkeoqsodkoqslmd', NULL),
+(25, 'ezaoemlzamlke', NULL),
+(26, 'azepzepae', NULL),
+(27, 'hannick789', NULL),
+(28, 'hannick213', NULL),
+(29, 'hannick4567', NULL),
+(30, 'hannickfinal', NULL),
+(31, 'hannickfinal2', NULL),
+(32, 'hannick8000', NULL),
+(33, 'hannickfinar', 37),
+(34, 'zaeazeazezaeazeaeazeaze', 39),
+(35, 'lazkjlemkalmze', 47),
+(36, 'zaeazeazeaze', NULL),
+(37, 'lazekkzamle', NULL),
+(38, 'zaezdqkmdkqskldq', NULL),
+(39, 'hannick12312324214', 38),
+(40, 'ijqsdkmqsmldlkmf', 38),
+(41, 'hannickmazjelkmzaemlqs', 39),
+(42, 'klazkoelmdq', NULL);
 
 -- --------------------------------------------------------
 
@@ -58,6 +116,12 @@ INSERT INTO `objets` (`Id`, `nom`, `longitude`, `latitude`, `zoom_min`, `code`, 
 --
 
 --
+-- Indexes for table `gamedata`
+--
+ALTER TABLE `gamedata`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- Indexes for table `objets`
 --
 ALTER TABLE `objets`
@@ -66,6 +130,12 @@ ALTER TABLE `objets`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `gamedata`
+--
+ALTER TABLE `gamedata`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT for table `objets`

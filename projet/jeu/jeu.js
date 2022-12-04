@@ -1,9 +1,9 @@
 //Déclaration de variables globales
-
-var map = L.map('map').setView([51.505, -0.09], 13);
+var start = new Date().getTime();
+var map = L.map('map').setView([48.841309657279105, 2.5876641460328806], 13);
 var inventaire = document.getElementById("inventaire");
 var formulaire = document.getElementById("form");
-
+var username;
 //On charge les slots d'inventaire
 
 var placeholder1 = document.getElementById("obj1");
@@ -81,7 +81,7 @@ fetch('objets.php?id=1') //Requête ajax pour récupérer l'objet qui a l'id cor
                 map.addLayer(Markers);
             }
     });
-    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    ;
 })
 
 //Objet qui donne un code
@@ -127,7 +127,7 @@ fetch('objets.php?id=2')
 
     codeMarker.bindPopup(popupStatic);
 
-    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    ;
 })
 
 //Objet bloqué par un code
@@ -339,7 +339,7 @@ fetch('objets.php?id=4')
     });
 
     treasureMarker.bindPopup(popupStatic);
-    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    ;
     sortieMarker.bindPopup(popupStaticRouge);
 })
 
@@ -436,7 +436,7 @@ fetch('objets.php?id=5')
     });
 
     treasureMarker.bindPopup(popupStatic);
-    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+    
     sortieMarker.bindPopup(popupStaticBleue);
 })
 
@@ -495,7 +495,13 @@ fetch('objets.php?id=6')
                 });
             var portalMarker = new L.marker([62.9028594423923, 92.56113619207827], {icon: portalIcon}).addTo(map);
             map.setView([62.9028594423923, 92.56113619207827],5);
-            
+            portalMarker.on("click",function(){
+                var end = new Date().getTime();
+                var score = Math.floor((end - start)/1000);
+                var element = document.getElementById("score");
+                element.value = score;
+                document.getElementById("useform").submit();
+            })
         }
         else if(placeholder2.classList.contains("bleue") && !(placeholder3.classList.contains("rouge"))){
             popup.setContent("Vous n'avez pas la gemme rouge.");
@@ -543,5 +549,13 @@ fetch('objets.php?id=6')
     });
     sortieMarker.bindPopup(popupStaticVerte);
     treasureMarker.bindPopup(popupStatic);
-    var marker = new L.Marker([result.latitude, result.longitude]).addTo(map);
+})
+
+fetch('score.php')
+.then(result => result.json())
+.then(result => {
+    console.log(result[0].score);
+    console.log(result[1].username);
+    var count = Object.keys(result).length;
+    console.log(count);
 })
