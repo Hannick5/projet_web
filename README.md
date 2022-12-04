@@ -48,12 +48,12 @@ Pour le côté client nous avons implémenter en CSS une approche GRID pour la s
 5. Indiquez la position du dossier projet dans les paramètres de MAMP.
 6. Lancez le web serveur Apache et allez sur : http://localhost:8888/MAMP/ (ici 8888 indique le port que vous avez choisit modifiez le lien en fonction).
 7. Allez dans Tools > phpMyAdmin > import et choisissez le fichier '.sql' du projet importez le dans une bdd nommée "projet_web_db".
-8. Vérifiez les paramètres dans le fichier objet.php (emplacement indiqué dans l'arborescence de dossiers)
+8. Vérifiez les paramètres dans les fichiers php.
     ```sh
    $link = mysqli_connect('localhost', 'root', 'root', 'projet_web_db');
    ```
     Par défaut le nom d'utilisateur et le mot de passe de mysql pour MAMP sont 'root' et 'root' si vous les avez modifiés modifiez les dans le objets.php aussi. 
-9. Lancez 'login.html' dans le dossier 'login'.
+9. Lancez 'index.html' dans le dossier 'register'.
 10. Vous pouvez maintenant jouer au jeu !
 
 ## Jeu
@@ -62,9 +62,9 @@ Le but de l'escape game est de trouver 3 gemmes en résolvant des énigmes qui v
 
 ## Solution du jeu
 
-Pour le code du coffre fort : cathédrale de forcalquier
+Pour le code du coffre fort : cathédrale de Forcalquier
 
-Pour la clé : sur la tour eiffel
+Pour la clé : sur la tour Eiffel
 
-Pour les 3 coffres : vert mont rushmore, bleu muraille de chine, rouge Grand monument Mansudae
+Pour les 3 coffres : vert Mont Rushmore, bleu muraille de Chine, rouge Grand monument Mansudae
 
